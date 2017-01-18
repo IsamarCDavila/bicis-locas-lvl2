@@ -1,134 +1,93 @@
-//validar que todos los campos esten llenos
+//funcion que cree nodos 
+function crearNodo( contenedor , mensaje)
+{
+  var nodo = document.createElement("span");
+  nodo.innerText = mensaje;
+  contenedor.appendChild(nodo);
+}
+
 function validateForm()
 {
-  var salida_enviar = document.getElementById("salida_enviar");
-  var nombre = document.getElementById("name").value;   
-  var lastname = document.getElementById("lastname").value;    
-  if( nombre.length == 0 && lastname.length == 0 && validaEmail()==false && validaPass()==false && validaBici()==false)
-  { 
-    salida_name.innerHTML="<span>Debe Ingresar su Nombre</span>";  
-    salida_lastname.innerHTML="<span >Debe  Ingresar su Apellido</span>"; 
-    salida_mail.innerHTML="<span>Debe Ingresar su correo</span>";
-    salida_pass.innerHTML="<span>Debe Ingresar su Contraseña</span";
-    salida_bici.innerHTML="<span>Debe seleccionar una bici</span>";
-    
-   	return false;
-  } 
-}	
+     
+  validaName();
+  validaLastname();
+  validaEmail();
+  validaPass();
+  validaBici();
 
-//valida solo letras en el campo de nombres y apellidos
-function checkInput(evt)
-{
-  //console.log(window.event.keyCode);
-  if(window.event.keyCode >='65' && window.event.keyCode<='90' || window.event.keyCode =='8' || window.event.keyCode =='32' )
-    return true;
-  else
-  	//salida_name.innerHTML="<span style='color:red; font-size:15px;' >Debes escribir letras</span>";
-    evt.preventDefault();
 }
+function primMayuscula(id)
+{
+    var nombreArray = id.split("");
+    var primeraLetra = nombreArray[0];
+    var primeraMayus = primeraLetra.toUpperCase();
+    var cortePalabra = false;
+     for(var i=1;i<nombreArray.length;i++)
+        {
+          if(cortePalabra)
+          {    
+            primeraMayus += nombreArray[i].toUpperCase();
+            cortePalabra = false;
+          }
+          else
+              primeraMayus+=nombreArray[i];
+          if(nombreArray[i] == " ")
+              cortePalabra = true;
+        }
+    return primeraMayus;
+} 
+
 //convierte la primera letra en mayuscula
 function validaName() 
 {
-    var lastname = document.getElementById("name").value;    
-    var nombreArray = lastname.split("");
-    var primeraLetra = nombreArray[0];
-    var primeraMayus = primeraLetra.toUpperCase();
-    var cortePalabra = false;
-     for(var i=1;i<nombreArray.length;i++)
-        {
-          if(cortePalabra)
-          {    
-            primeraMayus += nombreArray[i].toUpperCase();
-            cortePalabra = false;
-          }
-          else
-              primeraMayus+=nombreArray[i];
-          if(nombreArray[i] == " ")
-              cortePalabra = true;
-        } 
-
-        salida_name.innerHTML="<span  >Apellido valido</span>";  
-        document.getElementById("name").value = primeraMayus; 
- }
+  var name = document.getElementById("name").value; 
+  if(name.length==0)
+    {  
+       crearNodo( contenedorName ,"Debes Ingresar Nombre");
+    } 
+  if(name.length!= 0){
+      var letra=primMayuscula(name);
+      document.getElementById("name").value = letra; 
+      /*name.parentNode.removeChild(name.nextSibling);*/
+      crearNodo( contenedorName ,"Nombre ingresado");
+   
+   } 
+}
 //valida el apellido segun el formato valido
 function validaLastname() 
 {
-    var lastname = document.getElementById("lastname").value;    
-    var nombreArray = lastname.split("");
-    var primeraLetra = nombreArray[0];
-    var primeraMayus = primeraLetra.toUpperCase();
-    var cortePalabra = false;
-     for(var i=1;i<nombreArray.length;i++)
-        {
-          if(cortePalabra)
-          {    
-            primeraMayus += nombreArray[i].toUpperCase();
-            cortePalabra = false;
-          }
-          else
-              primeraMayus+=nombreArray[i];
-          if(nombreArray[i] == " ")
-              cortePalabra = true;
-        } 
-
-        salida_lastname.innerHTML="<span  >Apellido valido</span>";  
-        document.getElementById("lastname").value = primeraMayus; 
+  var lastname = document.getElementById("lastname").value;    
+  if(lastname==0){
+      crearNodo(contenedorLastname,"Debes Ingresar Apellido");}
+  if(lastname.length!= 0)
+  {
+    var letra=primMayuscula(lastname);
+    crearNodo(contenedorLastname,"Apellido Valido");
+    document.getElementById("lastname").value = letra; 
+  }
 }
 //valida el email segun el formato valido
 function validaEmail() 
-{
-  
+{ 
   var email = document.getElementById("input-email").value;
-  var salida_mail = document.getElementById("salida_mail");
-  
-  if (!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) 
-  {
-    salida_mail.innerHTML="<span>Formato Invalido, Ej: name@domain.com</span>";
-    return false;
-  }
-  else 
-  {
-    salida_mail.innerHTML="<span >Email valido </span>";
-    return true;
-  }
-  
+  if (!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)){ crearNodo(contenedorEmail,"Formato Invalido, Ej: name@domain.com"); return false; }
+  else{ crearNodo(contenedorEmail,"Email valido ?"); return true; }
 }
 //valida la contraseña, el minimo 6 caracteres
 function validaPass()
-
 {
   var password = document.getElementById("input-password").value;
-  var salida_pass = document.getElementById("salida_pass");
-  if (!password.match(/.{6,}/)) 
-  {
-    salida_pass.innerHTML="<span >Minimo 6 caracteres</span>";
-    return false;
-  }
+  if (!password.match(/.{6,}/)){ crearNodo(contenedorPassword,"Minimo 6 caracteres"); return false;}
   else if ( password == "123456" || password.toLowerCase() == "password" || password == "098754") 
   {
-    salida_pass.innerHTML="<span  >Contraseña Invalida</span>";
+    crearNodo(contenedorPassword,"Contraseña Invalida");
     return false;
   }
-  else 
-  {
-    salida_pass.innerHTML="<span >Contraseña valida </span";
-    return true;
-  }
+  else{ crearNodo(contenedorPassword,"Contraseña valida "); return true; }
 }
 function validaBici()
-
 {
   var tipoBici = document.getElementById("select_bici").value;
-  var salida_bici = document.getElementById("salida_bici");
-  if (tipoBici != 0)
-  {
-     salida_bici.innerHTML="<span>Bici Seleccionada </span>";
-    return true; 
-  }
-  else 
-  {
-    salida_bici.innerHTML="<span >Selecciona una Bici</span>";
-    return false;
-    
-  }
+  if (tipoBici != 0){ crearNodo(contenedorBici,"Bici Seleccionada  "); return true; }
+  else{ crearNodo(contenedorBici,"Selecciona una Bici"); return false; }
 }
